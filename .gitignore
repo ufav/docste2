@@ -1,0 +1,25 @@
+# Ignoring node_modules for React frontend
+/frontend/node_modules/
+
+# Ignoring build directory for React frontend
+/frontend/build/
+/frontend/dist/
+
+# Ignoring environment files for frontend
+/frontend/.env
+/frontend/.gitignore
+
+# Ignoring Python virtual environment for FastAPI backend
+/backend/venv/
+/backend/.env
+
+# Ignoring __pycache__ directories for FastAPI backend
+/backend/__pycache__/
+/backend/*.pyc
+
+# Ignoring log files
+*.log
+
+# Ignoring OS generated files
+.DS_Store
+Thumbs.db
