@@ -4,34 +4,44 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
+      - "80:80"  # Проброс порта 80 на хосте на порт 80 в контейнере
     depends_on:
-      - backend
+      - backend  # Убедитесь, что сервис backend запущен перед frontend
 
   backend:
     build:
       context: ./backend
-    command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 & python admin.py"
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/app
-    depends_on:
-      - db
+      - "8000:8000"  # Проброс порта 8000 на хосте на порт 8000 в контейнере
     environment:
-      - DATABASE_URL=postgresql://postgres:123@db:5432/docste
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      - db  # Убедитесь, что сервис db запущен перед backend
+    env_file:
+      - .env  # Загрузка переменных окружения из файла .env
 
   db:
-    image: postgres:13
+    image: postgres:13  # Использование образа PostgreSQL 13
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=docste
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"  # Проброс порта 5432 на хосте на порт 5432 в контейнере
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  # Сохранение данных в именованном томе
+    env_file:
+      - .env  # Загрузка переменных окружения из файла .env
+
+  nginx:
+    image: nginx:latest  # Использование последнего образа Nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Проброс кастомного конфигурационного файла Nginx
+    ports:
+      - "8080:80"  # Проброс порта 8080 на хосте на порт 80 в контейнере
 
 volumes:
-  pgdata:
+  postgres_data:  # Определение именованного тома для данных PostgreSQL
