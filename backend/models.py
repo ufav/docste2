@@ -1,7 +1,8 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Text, func
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Text, func, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from database import Base
+from database import metadata
 
 
 class Company(Base):    # справочник
@@ -62,11 +63,12 @@ class DocumentType(Base):    # справочник
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    login = Column(String(64), nullable=False)
+    username = Column(String(64), nullable=False)
     password = Column(String(64), nullable=False)
     email = Column(String(64), nullable=False)
     role_id = Column(Integer, nullable=False)
     department_id = Column(Integer)
+    active = Column(Integer)
 
 
 class UserRole(Base):    # справочник
@@ -146,6 +148,8 @@ class Document(Base):
     revision_step_id = Column(Integer, nullable=False, index=True)
     revision_number = Column(String(8), nullable=False, index=True)
     language_id = Column(Integer, nullable=False, index=True)
+    folder_id = Column(Integer, nullable=False, index=True)
+    user_id = Column(Integer, nullable=False, index=True)
 
 
 class UserProjectAccess(Base):
@@ -187,3 +191,22 @@ class Transmittal(Base):
     issued = Column(DateTime(timezone=True))
     remarks = Column(Text)
     document_id = Column(Integer, nullable=False, index=True)
+
+
+class Folder(Base):    # справочник
+    __tablename__ = 'folders'
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    parent_id = Column(Integer, nullable=False, index=True)
+    project_id = Column(Integer, nullable=False, index=True)
+    deleted = Column(Integer, default=0)
+
+
+users = Table(
+    "users",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("username", String, unique=True, index=True),
+    Column("password", String),
+    Column("role_id", Integer, index=True),
+)

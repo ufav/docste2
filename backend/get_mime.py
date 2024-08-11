@@ -2,6 +2,7 @@ import mimetypes
 import random
 import string
 
+
 def generate_random_uid():
     random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
     return f'rc-upload-{random_suffix}'

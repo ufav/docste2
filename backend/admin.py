@@ -1,4 +1,3 @@
-# admin.py
 from flask import Flask, redirect, url_for, request, flash, render_template_string
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, AdminIndexView, expose
@@ -6,14 +5,14 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from database import engine
 from models import (Base, Document, DocumentType, Discipline, RevisionStatus, RevisionStep, Project, Company, Facility,
-                    Language, RevisionDescription)
+                    Language, RevisionDescription, User)
 
 app = Flask(__name__)
 
 # Настройки для подключения к базе данных
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123@localhost:5432/docste'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'Marlen'  # Установите секретный ключ
+app.config['SECRET_KEY'] = 'Marlen'
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -54,6 +53,7 @@ admin.add_view(MyModelView(RevisionDescription, db.session))
 admin.add_view(MyModelView(RevisionStep, db.session))
 admin.add_view(MyModelView(RevisionStatus, db.session))
 admin.add_view(MyModelView(Language, db.session))
+admin.add_view(MyModelView(User, db.session))
 
 
 @login_manager.user_loader

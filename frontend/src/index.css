@@ -38,3 +38,52 @@
   margin-left: 10px;
   text-align: left;
 }
+
+.custom-table-row {
+  height: 24px !important; /* Задайте нужную высоту строки */
+}
+
+.custom-table-cell {
+  padding: 4px 8px !important; /* Настройте отступы для ячеек */
+}
+
+.cell-ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.ant-table-pagination {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  z-index: 1;
+}
+
+.custom-table-row-active {
+  background-color: #d4edda; /* светло-зеленый цвет фона */
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Занимает всю высоту экрана */
+  background-color: #f0f2f5; /* Светлый фон */
+}
+
+.login-form {
+  background-color: white; /* Белый фон формы */
+  padding: 24px; /* Внутренние отступы */
+  border-radius: 8px; /* Округленные углы */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Тень для придания глубины */
+  max-width: 400px; /* Максимальная ширина формы */
+  width: 100%; /* Ширина формы 100% от родителя */
+}
+
+.hidden-column {
+  display: none;
+}

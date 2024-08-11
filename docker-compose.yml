@@ -6,42 +6,43 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "80:80"  # Проброс порта 80 на хосте на порт 80 в контейнере
+      - "5173:5173"
     depends_on:
-      - backend  # Убедитесь, что сервис backend запущен перед frontend
+      - backend
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"  # Проброс порта 8000 на хосте на порт 8000 в контейнере
+      - "8000:8000"
+      - "5000:5000"
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
-      - db  # Убедитесь, что сервис db запущен перед backend
+      - db
     env_file:
-      - .env  # Загрузка переменных окружения из файла .env
+      - .env
 
   db:
-    image: postgres:13  # Использование образа PostgreSQL 13
+    image: postgres:13
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"  # Проброс порта 5432 на хосте на порт 5432 в контейнере
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Сохранение данных в именованном томе
+      - postgres_data:/var/lib/postgresql/data
     env_file:
-      - .env  # Загрузка переменных окружения из файла .env
+      - .env
 
   nginx:
-    image: nginx:latest  # Использование последнего образа Nginx
+    image: nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf  # Проброс кастомного конфигурационного файла Nginx
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - "8080:80"  # Проброс порта 8080 на хосте на порт 80 в контейнере
+      - "80:80"
 
 volumes:
-  postgres_data:  # Определение именованного тома для данных PostgreSQL
+  postgres_data:
